@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Veter96</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div th:replace="fragments/navigation :: navigation"></div>
+        </aside>
+        
+        <main class="content">
+            <div class="welcome-section">
+                <h1>Добро пожаловать на Veter96</h1>
+                <h2>Opel Vectra B - Руководство по ремонту и эксплуатации</h2>
+                
+                <div class="intro-text">
+                    <p>Этот сайт содержит подробное руководство по ремонту и эксплуатации автомобиля Opel Vectra B, выпускавшегося с 1995 года.</p>
+                    
+                    <p>Здесь вы найдете информацию по:</p>
+                    <ul>
+                        <li>Органам управления и приборам контроля</li>
+                        <li>Техническому обслуживанию</li>
+                        <li>Двигателям и их системам</li>
+                        <li>Трансмиссии и ходовой части</li>
+                        <li>Электрооборудованию</li>
+                        <li>Основным неисправностям и их устранению</li>
+                    </ul>
+                </div>
+                
+                <div class="navigation-help">
+                    <h3>Навигация по сайту</h3>
+                    <p>Используйте меню слева для перехода к нужному разделу. Каждый раздел содержит подробную информацию и схемы.</p>
+                </div>
+                
+                <div class="general-info">
+                    <h3>Общая информация</h3>
+                    
+                    <h4>Регулятор яркости освещения приборов, переключатель заднего противотуманного света, переключатель противотуманных фар, ручка корректировки угла наклона фар</h4>
+                    
+                    <h4>Переключатель света</h4>
+                    <ul>
+                        <li>О = выключено</li>
+                        <li>= габаритные огни</li>
+                        <li>= ближний или дальний свет</li>
+                        <li>Потянуть на себя = освещение салона</li>
+                        <li>Нажать = задний противотуманный свет</li>
+                    </ul>
+                    
+                    <h4>Ближний и дальний свет</h4>
+                    <ul>
+                        <li>Рычаг вперед = дальний свет</li>
+                        <li>Рычаг на себя = ближний свет</li>
+                        <li>Если потянуть рычаг на себя до упора, то включается световой сигнал</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <footer class="footer">
+        <p>&copy; 2024 Veter96. Все права защищены.</p>
+    </footer>
+    
+    <script th:src="@{/js/script.js}"></script>
+</body>
+</html>

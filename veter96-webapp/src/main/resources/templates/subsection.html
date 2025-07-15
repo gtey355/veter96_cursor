@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Veter96</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div th:replace="fragments/navigation :: navigation"></div>
+        </aside>
+        
+        <main class="content">
+            <div class="subsection-content">
+                <h1 th:text="${pageTitle}">Заголовок подраздела</h1>
+                
+                <nav class="breadcrumb">
+                    <a th:href="@{/}">Главная</a> &gt; 
+                    <a th:href="@{'/section/' + ${sectionId}}" th:text="'Раздел ' + ${sectionId}">Раздел</a> &gt;
+                    <span th:text="${sectionId} + '.' + ${subId}">Подраздел</span>
+                </nav>
+                
+                <div class="subsection-intro">
+                    <div th:if="${sectionId == '1' and subId == '1'}">
+                        <h2>1.1. Переключатель света</h2>
+                        <div class="technical-info">
+                            <h3>Положения переключателя:</h3>
+                            <ul>
+                                <li><strong>О</strong> = выключено</li>
+                                <li><strong>=</strong> = габаритные огни</li>
+                                <li><strong>==</strong> = ближний или дальний свет</li>
+                            </ul>
+                            
+                            <h3>Дополнительные функции:</h3>
+                            <ul>
+                                <li><strong>Потянуть на себя</strong> = освещение салона</li>
+                                <li><strong>Нажать</strong> = задний противотуманный свет</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div th:if="${sectionId == '1' and subId == '2'}">
+                        <h2>1.2. Ближний и дальний свет</h2>
+                        <div class="technical-info">
+                            <h3>Управление светом:</h3>
+                            <ul>
+                                <li><strong>Рычаг вперед</strong> = дальний свет</li>
+                                <li><strong>Рычаг на себя</strong> = ближний свет</li>
+                                <li><strong>Потянуть рычаг на себя до упора</strong> = световой сигнал</li>
+                            </ul>
+                            
+                            <h3>Световой сигнал:</h3>
+                            <p>Рычаг в направлении рулевого колеса. Световой сигнал может быть включен также при включенных указателях поворота.</p>
+                        </div>
+                    </div>
+                    
+                    <div th:if="${sectionId == '1' and subId == '3'}">
+                        <h2>1.3. Указатели поворотов</h2>
+                        <div class="technical-info">
+                            <h3>Включение указателей:</h3>
+                            <ul>
+                                <li><strong>Рычаг в фиксированном положении вверх</strong> = правые указатели включены</li>
+                                <li><strong>Рычаг в фиксированном положении вниз</strong> = левые указатели включены</li>
+                            </ul>
+                            
+                            <h3>Автоматическое выключение:</h3>
+                            <p>При возврате рулевого колеса в исходное положение рычаг включения указателей поворота автоматически возвращается в исходное положение, кроме случаев незначительного поворота рулевого колеса.</p>
+                            
+                            <h3>Смена полосы движения:</h3>
+                            <p>При смене полосы движения нажимать рычаг только до ощутимого сопротивления. При отпускании рычаг возвращается в исходное положение.</p>
+                        </div>
+                    </div>
+                    
+                    <div th:if="${sectionId != '1' or (subId != '1' and subId != '2' and subId != '3')}">
+                        <h2>Подраздел в разработке</h2>
+                        <p>Содержимое данного подраздела находится в стадии разработки.</p>
+                        <p>Пожалуйста, воспользуйтесь навигационным меню для перехода к другим разделам.</p>
+                    </div>
+                </div>
+                
+                <div class="navigation-links">
+                    <div class="prev-next">
+                        <a th:if="${subId != '1'}" th:href="@{'/section/' + ${sectionId} + '/' + (T(java.lang.Integer).parseInt(subId) - 1)}" class="btn btn-prev">← Предыдущий</a>
+                        <a th:href="@{'/section/' + ${sectionId}}" class="btn btn-up">↑ К разделу</a>
+                        <a th:href="@{'/section/' + ${sectionId} + '/' + (T(java.lang.Integer).parseInt(subId) + 1)}" class="btn btn-next">Следующий →</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <footer class="footer">
+        <p>&copy; 2024 Veter96. Все права защищены.</p>
+    </footer>
+    
+    <script th:src="@{/js/script.js}"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<nav th:fragment="navigation" class="main-navigation">
+    <div class="nav-header">
+        <h2><a th:href="@{/}">Veter96 - Opel Vectra B</a></h2>
+        <p class="subtitle">Ремонт и эксплуатация автомобиля с 1995 года выпуска</p>
+    </div>
+    
+    <div class="nav-sections">
+        <div class="nav-item">
+            <a th:href="@{/section/1}" 
+               th:class="${currentPage == '1'} ? 'nav-link active' : 'nav-link'">
+                + 1. Органы управления и приборы контроля
+            </a>
+        </div>
+        
+        <div class="nav-item">
+            <a th:href="@{/section/2}" 
+               th:class="${currentPage == '2'} ? 'nav-link active' : 'nav-link'">
+                + 2. Техническое обслуживание
+            </a>
+        </div>
+        
+        <div class="nav-item">
+            <a th:href="@{/section/3}" 
+               th:class="${currentPage == '3'} ? 'nav-link active' : 'nav-link'">
+                + 3. Двигатели
+            </a>
+        </div>
+        
+        <div class="nav-item">
+            <a th:href="@{/section/4}" 
+               th:class="${currentPage == '4'} ? 'nav-link active' : 'nav-link'">
+                + 4. Отопление, вентиляция
+            </a>
+        </div>
+        
+        <div class="nav-item">
+            <a th:href="@{/section/5}" 
+               th:class="${currentPage == '5'} ? 'nav-link active' : 'nav-link'">
+                + 5. Топливная система
+            </a>
+        </div>
+        
+        <div class="nav-item">
+            <a th:href="@{/section/6}" 
+               th:class="${currentPage == '6'} ? 'nav-link active' : 'nav-link'">
+                + 6. Системы пуска, зажигания
+            </a>
+        </div>
+        
+        <div class="nav-item">
+            <a th:href="@{/section/7}" 
+               th:class="${currentPage == '7'} ? 'nav-link active' : 'nav-link'">
+                + 7. Трансмиссия
+            </a>
+        </div>
+        
+        <div class="nav-item">
+            <a th:href="@{/section/8}" 
+               th:class="${currentPage == '8'} ? 'nav-link active' : 'nav-link'">
+                + 8. Тормозная система
+            </a>
+        </div>
+        
+        <div class="nav-item">
+            <a th:href="@{/section/9}" 
+               th:class="${currentPage == '9'} ? 'nav-link active' : 'nav-link'">
+                + 9. Ходовая часть
+            </a>
+        </div>
+        
+        <div class="nav-item">
+            <a th:href="@{/section/10}" 
+               th:class="${currentPage == '10'} ? 'nav-link active' : 'nav-link'">
+                + 10. Кузов
+            </a>
+        </div>
+        
+        <div class="nav-item">
+            <a th:href="@{/section/11}" 
+               th:class="${currentPage == '11'} ? 'nav-link active' : 'nav-link'">
+                + 11. Электрооборудование
+            </a>
+        </div>
+        
+        <div class="nav-item">
+            <a th:href="@{/section/12}" 
+               th:class="${currentPage == '12'} ? 'nav-link active' : 'nav-link'">
+                + 12. Основные неисправности
+            </a>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>
