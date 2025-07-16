@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Просмотр файла</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div th:replace="fragments/navigation :: navigation"></div>
+        </aside>
+        
+        <main class="content">
+            <header class="page-header">
+                <h1><i class="fas fa-eye"></i> Просмотр файла</h1>
+                <div class="breadcrumb">
+                    <a href="/attachments">Файлы и документы</a> > <span th:text="${attachment.originalName}">Файл</span>
+                </div>
+            </header>
+
+            <div class="file-details">
+                <div class="file-main-info">
+                    <div class="file-icon-large">
+                        <i class="fas fa-file-alt" 
+                           th:classappend="${attachment.contentType != null and attachment.contentType.startsWith('image/') ? 'fa-file-image' : 
+                                          (attachment.contentType != null and attachment.contentType.contains('pdf') ? 'fa-file-pdf' :
+                                          (attachment.contentType != null and (attachment.contentType.contains('word') or attachment.contentType.contains('document')) ? 'fa-file-word' :
+                                          (attachment.contentType != null and (attachment.contentType.contains('excel') or attachment.contentType.contains('spreadsheet')) ? 'fa-file-excel' : 'fa-file-alt')))}"></i>
+                    </div>
+                    
+                    <div class="file-title-section">
+                        <h2 th:text="${attachment.originalName}" class="file-title">Example.pdf</h2>
+                        
+                        <div class="file-actions-main">
+                            <a th:href="@{/attachments/download/{id}(id=${attachment.id})}" 
+                               class="btn btn-primary btn-large">
+                                <i class="fas fa-download"></i> Скачать файл
+                            </a>
+                            <a th:href="@{/attachments/edit/{id}(id=${attachment.id})}" 
+                               class="btn btn-secondary">
+                                <i class="fas fa-edit"></i> Редактировать
+                            </a>
+                            <button type="button" class="btn btn-danger" 
+                                    onclick="confirmDelete()" 
+                                    th:data-id="${attachment.id}"
+                                    th:data-name="${attachment.originalName}">
+                                <i class="fas fa-trash"></i> Удалить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="file-info-grid">
+                    <div class="info-card">
+                        <h3><i class="fas fa-info-circle"></i> Основная информация</h3>
+                        <div class="info-table">
+                            <div class="info-row">
+                                <span class="info-label">Размер файла:</span>
+                                <span class="info-value" th:text="${attachment.formattedFileSize}">1.2 MB</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Тип файла:</span>
+                                <span class="info-value" th:text="${attachment.contentType ?: 'Неизвестно'}">application/pdf</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Дата загрузки:</span>
+                                <span class="info-value" 
+                                      th:text="${#temporals.format(attachment.uploadDate, 'dd.MM.yyyy HH:mm')}">01.01.2024 12:00</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Количество скачиваний:</span>
+                                <span class="info-value">
+                                    <span th:text="${attachment.downloadCount}">0</span>
+                                    <i class="fas fa-download"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card" th:if="${attachment.category}">
+                        <h3><i class="fas fa-tag"></i> Категория</h3>
+                        <div class="category-badge">
+                            <span th:text="${attachment.category}">Документы</span>
+                        </div>
+                        <p class="category-description">
+                            Файлы этой категории можно найти в разделе 
+                            <a th:href="@{/attachments(category=${attachment.category})}" 
+                               th:text="${attachment.category}">Документы</a>
+                        </p>
+                    </div>
+
+                    <div class="info-card" th:if="${attachment.description}">
+                        <h3><i class="fas fa-file-alt"></i> Описание</h3>
+                        <div class="description-content">
+                            <p th:text="${attachment.description}">Описание файла</p>
+                        </div>
+                    </div>
+
+                    <!-- Image preview for image files -->
+                    <div class="info-card" 
+                         th:if="${attachment.contentType != null and attachment.contentType.startsWith('image/')}">
+                        <h3><i class="fas fa-image"></i> Предварительный просмотр</h3>
+                        <div class="image-preview">
+                            <img th:src="@{/attachments/download/{id}(id=${attachment.id})}" 
+                                 th:alt="${attachment.originalName}"
+                                 class="preview-image">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related files -->
+                <div th:if="${attachment.category}" class="related-files">
+                    <h3><i class="fas fa-folder"></i> Другие файлы в категории "<span th:text="${attachment.category}"></span>"</h3>
+                    <div class="quick-links">
+                        <a th:href="@{/attachments(category=${attachment.category})}" class="btn btn-outline">
+                            <i class="fas fa-list"></i> Показать все файлы категории
+                        </a>
+                        <a href="/attachments" class="btn btn-outline">
+                            <i class="fas fa-arrow-left"></i> Вернуться к списку
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>Подтверждение удаления</h3>
+            <p>Вы уверены, что хотите удалить файл "<span id="deleteFileName" th:text="${attachment.originalName}"></span>"?</p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Отмена</button>
+                <form id="deleteForm" method="post" th:action="@{/attachments/delete/{id}(id=${attachment.id})}" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Ветеринар Васильев А.В. Все права защищены.</p>
+    </footer>
+
+    <script th:src="@{/js/script.js}"></script>
+    <script>
+        function confirmDelete() {
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        // Close modal on outside click
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDeleteModal();
+            }
+            if (e.key === 'd' && e.ctrlKey) {
+                e.preventDefault();
+                document.querySelector('a[href*="/download/"]').click();
+            }
+        });
+    </script>
+</body>
+</html>

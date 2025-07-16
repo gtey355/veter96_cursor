@@ -1,174 +1,210 @@
-# Veter96 Web Application
+# Ветеринар Васильев А.В. - Веб-сайт с системой файлов
 
-## Overview
+Полноценный веб-сайт ветеринарной практики на Spring Boot с Thymeleaf и системой управления файлами.
 
-This is a Spring Boot MVC web application that recreates the structure and navigation of the original veter96.ru website. The application provides a comprehensive manual for Opel Vectra B automobiles (manufactured since 1995) with detailed information about repair and operation.
+## Описание проекта
 
-## Features
+Это веб-приложение для ветеринара-невролога/кардиолога в Екатеринбурге со следующими возможностями:
 
-- **Faithful Navigation Structure**: Preserves the original site's navigation with 12 main sections
-- **Responsive Design**: Modern, mobile-friendly interface
-- **Thymeleaf Templates**: Server-side rendering with reusable components
-- **Section-based Organization**: Hierarchical content structure with main sections and subsections
-- **Russian Language Support**: Full UTF-8 support for Cyrillic text
+### Основная информация о враче
+- **Специализация**: Неврология и кардиология собак и кошек (20 лет опыта)
+- **Контакты**: 
+  - Email: DoktorVasilyev@yandex.ru
+  - Телефон: 8 912 656 99 39
+- **Услуги**: Консультации, выезд на дом, дистанционные консультации
 
-## Technology Stack
+### Функциональность сайта
 
-- **Backend**: Spring Boot 3.2.1
-- **Template Engine**: Thymeleaf
-- **Frontend**: HTML5, CSS3, JavaScript (ES6)
-- **Build Tool**: Maven
-- **Java Version**: 17+
+#### 1. Система управления файлами (Attachments)
+- **Загрузка файлов**: Drag & drop интерфейс с поддержкой различных форматов
+- **Управление файлами**: Просмотр, редактирование, удаление
+- **Категоризация**: Организация файлов по категориям
+- **Поиск**: Полнотекстовый поиск по названиям и описаниям
+- **Статистика**: Отслеживание количества скачиваний
+- **Ограничения**: Максимальный размер файла 10 МБ
 
-## Project Structure
+#### 2. Разделы сайта
+- **Главная страница**: Обзор услуг и контактная информация
+- **Вопрос-ответ**: Ответы на частые вопросы
+- **Услуги и цены**: Перечень услуг с ценами
+- **Отзывы**: Отзывы клиентов
+- **Файлы и документы**: Система управления файлами
+- **170 заболеваний кожи**: База данных с 1200 фото
+- **О враче**: Информация об образовании и опыте
+- **Научные статьи**: Переводы из ветеринарных журналов
+- **Специализации**: Неврология, кардиология, дерматология
+- **Контакты**: Контактная информация и время работы
+
+#### 3. Интеграция с социальными сетями
+- Ссылка на Telegram канал с научными материалами
+- Новости и статьи из ветеринарных журналов
+
+## Технические характеристики
+
+### Backend
+- **Spring Boot 3.2.1**: Основной фреймворк
+- **Spring Data JPA**: Работа с базой данных
+- **H2 Database**: Встроенная база данных для разработки
+- **Spring Validation**: Валидация форм
+- **Commons IO**: Работа с файлами
+
+### Frontend
+- **Thymeleaf**: Шаблонизатор
+- **HTML5/CSS3**: Современная верстка
+- **Font Awesome 6.0**: Иконки
+- **JavaScript**: Интерактивность
+- **Responsive Design**: Адаптивная верстка
+
+### Архитектура файлов
 
 ```
-veter96-webapp/
-├── src/
-│   └── main/
-│       ├── java/com/veter96/webapp/
-│       │   ├── Veter96WebappApplication.java    # Main Spring Boot application
-│       │   └── controller/
-│       │       └── MainController.java          # Main controller handling all routes
-│       └── resources/
-│           ├── templates/
-│           │   ├── fragments/
-│           │   │   └── navigation.html          # Reusable navigation component
-│           │   ├── index.html                   # Homepage template
-│           │   ├── layout.html                  # Base layout template
-│           │   ├── section.html                 # Section page template
-│           │   └── subsection.html              # Subsection page template
-│           ├── static/
-│           │   ├── css/
-│           │   │   └── style.css                # Main stylesheet
-│           │   └── js/
-│           │       └── script.js                # JavaScript functionality
-│           └── application.properties           # Spring Boot configuration
-└── pom.xml                                      # Maven configuration
+src/main/java/com/veter96/webapp/
+├── Veter96WebappApplication.java         # Главный класс приложения
+├── controller/
+│   ├── MainController.java               # Основные страницы
+│   └── AttachmentController.java         # Управление файлами
+├── model/
+│   └── Attachment.java                   # Модель файла
+├── repository/
+│   └── AttachmentRepository.java         # Репозиторий для файлов
+└── service/
+    └── AttachmentService.java            # Бизнес-логика файлов
+
+src/main/resources/
+├── templates/
+│   ├── index.html                        # Главная страница
+│   ├── fragments/
+│   │   └── navigation.html               # Навигационное меню
+│   └── attachments/
+│       ├── list.html                     # Список файлов
+│       ├── upload.html                   # Загрузка файлов
+│       ├── view.html                     # Просмотр файла
+│       └── edit.html                     # Редактирование файла
+├── static/
+│   └── css/
+│       └── style.css                     # Стили сайта
+└── application.properties               # Конфигурация
 ```
 
-## Navigation Structure
+## Установка и запуск
 
-The application implements the following navigation structure from the original site:
+### Требования
+- Java 17+
+- Maven 3.6+
 
-1. **Органы управления и приборы контроля** (Controls and Instruments)
-2. **Техническое обслуживание** (Maintenance)
-3. **Двигатели** (Engines)
-4. **Отопление, вентиляция** (Heating, Ventilation)
-5. **Топливная система** (Fuel System)
-6. **Системы пуска, зажигания** (Starting, Ignition Systems)
-7. **Трансмиссия** (Transmission)
-8. **Тормозная система** (Brake System)
-9. **Ходовая часть** (Running Gear)
-10. **Кузов** (Body)
-11. **Электрооборудование** (Electrical Equipment)
-12. **Основные неисправности** (Main Malfunctions)
-
-## Route Structure
-
-- `/` - Homepage with welcome information
-- `/section/{sectionId}` - Main section pages (e.g., `/section/1`)
-- `/section/{sectionId}/{subId}` - Subsection pages (e.g., `/section/1/1`)
-
-## Key Features
-
-### Navigation Component
-- Persistent sidebar navigation on all pages
-- Active page highlighting
-- Responsive design for mobile devices
-- Original site structure preservation
-
-### Content Organization
-- Hierarchical breadcrumb navigation
-- Section-specific content
-- Technical information boxes
-- Cross-references between sections
-
-### User Experience
-- Smooth scrolling navigation
-- Print-friendly styles
-- Back-to-top functionality
-- Mobile-responsive design
-- Keyboard shortcuts (Ctrl+P for printing)
-
-## Running the Application
-
-### Prerequisites
-- Java 17 or higher
-- Maven 3.6 or higher
-
-### Installation and Startup
-
-1. **Clone or extract the project**
-   ```bash
-   cd veter96-webapp
-   ```
-
-2. **Run with Maven**
-   ```bash
-   mvn spring-boot:run
-   ```
-
-3. **Access the application**
-   - Open your browser and navigate to `http://localhost:8080`
-   - The application will be running on port 8080
-
-### Alternative Running Method
-If Maven wrapper is not available, you can also run:
+### Запуск приложения
 ```bash
-./mvnw spring-boot:run
+# Клонирование и переход в директорию
+cd veter96-webapp
+
+# Компиляция и запуск
+mvn spring-boot:run
 ```
 
-## Configuration
+### Доступ к приложению
+- **Веб-сайт**: http://localhost:8080
+- **H2 Console**: http://localhost:8080/h2-console (для отладки БД)
+  - JDBC URL: `jdbc:h2:mem:testdb`
+  - Username: `sa`
+  - Password: `password`
 
-The application can be configured through `application.properties`:
+## API эндпоинты
 
-- **Server Port**: `server.port=8080`
-- **Thymeleaf Caching**: Disabled for development
-- **Static Resources**: Served from `/static/`
-- **Character Encoding**: UTF-8 for Russian language support
+### Основные страницы
+- `GET /` - Главная страница
+- `GET /section/{sectionId}` - Разделы сайта
+- `GET /section/{sectionId}/{subId}` - Подразделы
 
-## Development
+### Управление файлами
+- `GET /attachments` - Список файлов
+- `GET /attachments/upload` - Форма загрузки
+- `POST /attachments/upload` - Загрузка файла
+- `GET /attachments/download/{id}` - Скачивание файла
+- `GET /attachments/view/{id}` - Просмотр информации о файле
+- `GET /attachments/edit/{id}` - Редактирование файла
+- `POST /attachments/edit/{id}` - Сохранение изменений
+- `POST /attachments/delete/{id}` - Удаление файла
+- `GET /attachments/popular` - Популярные файлы
 
-### Hot Reload
-The application includes Spring Boot DevTools for automatic restart during development:
-- Template changes are reflected immediately
-- Static resource changes don't require restart
-- Java code changes trigger automatic application restart
+### Параметры запросов
+- `?category={category}` - Фильтр по категории
+- `?search={keyword}` - Поиск по ключевому слову
 
-### Adding New Content
-1. **New Sections**: Add cases to the switch statements in `MainController.java`
-2. **New Templates**: Create new Thymeleaf templates in `/templates/`
-3. **New Styles**: Add CSS rules to `/static/css/style.css`
-4. **New JavaScript**: Add functionality to `/static/js/script.js`
+## Конфигурация
 
-## Browser Support
+### Настройки файлов (application.properties)
+```properties
+# Максимальный размер файла
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
 
-- **Modern Browsers**: Chrome 70+, Firefox 65+, Safari 12+, Edge 79+
-- **Mobile**: iOS Safari, Chrome Mobile, Samsung Internet
-- **Features**: CSS Grid, Flexbox, ES6 JavaScript
+# Директория для загрузки файлов
+app.upload.dir=uploads
 
-## Accessibility
+# База данных H2
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.h2.console.enabled=true
+```
 
-- Semantic HTML structure
-- Keyboard navigation support
-- Print stylesheet included
-- Russian language declarations
-- Screen reader friendly markup
+## Особенности реализации
 
-## Original Site Reference
+### Безопасность файлов
+- Проверка типов файлов
+- Ограничение размера файлов
+- Уникальные имена файлов (UUID)
+- Валидация путей файлов
 
-This application recreates the structure of https://veter96.ru/, which was an automotive technical manual website for Opel Vectra B vehicles. The navigation structure and content organization have been preserved while modernizing the user interface and adding responsive design capabilities.
+### UI/UX
+- Drag & drop загрузка файлов
+- Прогресс-бар загрузки
+- Предварительный просмотр изображений
+- Модальные окна подтверждения
+- Адаптивный дизайн для мобильных устройств
 
-## License
+### Функции поиска
+- Полнотекстовый поиск
+- Фильтрация по категориям
+- Сортировка по дате и популярности
+- Активные фильтры с возможностью очистки
 
-© 2024 Veter96. All rights reserved.
+## Структура базы данных
 
-## Contributing
+### Таблица attachments
+- `id` - Уникальный идентификатор
+- `file_name` - Имя файла в системе
+- `original_name` - Оригинальное имя файла
+- `file_path` - Путь к файлу
+- `content_type` - MIME тип
+- `file_size` - Размер файла в байтах
+- `description` - Описание файла
+- `category` - Категория файла
+- `upload_date` - Дата загрузки
+- `download_count` - Количество скачиваний
 
-To contribute to this project:
-1. Follow the existing code style
-2. Test thoroughly on multiple browsers
-3. Ensure Russian text encoding is preserved
-4. Maintain the original navigation structure
-5. Add appropriate documentation for new features
+## Дальнейшее развитие
+
+### Возможные улучшения
+- Аутентификация и авторизация
+- Система комментариев к файлам
+- Интеграция с облачными хранилищами
+- Система тегов для файлов
+- API для мобильного приложения
+- Система резервного копирования
+- Продвинутая аналитика использования
+
+### Производственная среда
+- Переход на PostgreSQL/MySQL
+- Настройка Spring Security
+- Логирование и мониторинг
+- Docker контейнеризация
+- CI/CD pipeline
+
+## Лицензия
+
+© 2024 Ветеринар Васильев А.В. Все права защищены.
+
+## Контакты
+
+- **Email**: DoktorVasilyev@yandex.ru
+- **Телефон**: 8 912 656 99 39
+- **Telegram**: https://t.me/veterinar66

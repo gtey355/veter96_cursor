@@ -7,92 +7,105 @@
 
 <nav th:fragment="navigation" class="main-navigation">
     <div class="nav-header">
-        <h2><a th:href="@{/}">Veter96 - Opel Vectra B</a></h2>
-        <p class="subtitle">Ремонт и эксплуатация автомобиля с 1995 года выпуска</p>
+        <h2><a th:href="@{/}">Ветеринар Васильев А.В.</a></h2>
+        <p class="subtitle">Невролог/кардиолог в Екатеринбурге</p>
+        <div class="nav-contact">
+            <p><i class="fas fa-envelope"></i> DoktorVasilyev@yandex.ru</p>
+            <p><i class="fas fa-phone"></i> 8 912 656 99 39</p>
+        </div>
     </div>
     
     <div class="nav-sections">
         <div class="nav-item">
-            <a th:href="@{/section/1}" 
-               th:class="${currentPage == '1'} ? 'nav-link active' : 'nav-link'">
-                + 1. Органы управления и приборы контроля
+            <a th:href="@{/}" 
+               th:class="${currentPage == 'index'} ? 'nav-link active' : 'nav-link'">
+                <i class="fas fa-home"></i> Главная
             </a>
         </div>
         
         <div class="nav-item">
-            <a th:href="@{/section/2}" 
-               th:class="${currentPage == '2'} ? 'nav-link active' : 'nav-link'">
-                + 2. Техническое обслуживание
+            <a th:href="@{/section/qa}" 
+               th:class="${currentPage == 'qa'} ? 'nav-link active' : 'nav-link'">
+                <i class="fas fa-question-circle"></i> Вопрос-ответ
             </a>
         </div>
         
         <div class="nav-item">
-            <a th:href="@{/section/3}" 
-               th:class="${currentPage == '3'} ? 'nav-link active' : 'nav-link'">
-                + 3. Двигатели
+            <a th:href="@{/section/services}" 
+               th:class="${currentPage == 'services'} ? 'nav-link active' : 'nav-link'">
+                <i class="fas fa-list"></i> Перечень и стоимость услуг
             </a>
         </div>
         
         <div class="nav-item">
-            <a th:href="@{/section/4}" 
-               th:class="${currentPage == '4'} ? 'nav-link active' : 'nav-link'">
-                + 4. Отопление, вентиляция
+            <a th:href="@{/section/reviews}" 
+               th:class="${currentPage == 'reviews'} ? 'nav-link active' : 'nav-link'">
+                <i class="fas fa-comments"></i> Отзывы
             </a>
         </div>
         
         <div class="nav-item">
-            <a th:href="@{/section/5}" 
-               th:class="${currentPage == '5'} ? 'nav-link active' : 'nav-link'">
-                + 5. Топливная система
+            <a th:href="@{/attachments}" 
+               th:class="${currentPage == 'attachments' or currentPage == 'upload'} ? 'nav-link active' : 'nav-link'">
+                <i class="fas fa-file-alt"></i> Файлы и документы
             </a>
         </div>
         
         <div class="nav-item">
-            <a th:href="@{/section/6}" 
-               th:class="${currentPage == '6'} ? 'nav-link active' : 'nav-link'">
-                + 6. Системы пуска, зажигания
+            <a th:href="@{/section/diseases}" 
+               th:class="${currentPage == 'diseases'} ? 'nav-link active' : 'nav-link'">
+                <i class="fas fa-microscope"></i> 170 заболеваний кожи собак и кошек
             </a>
         </div>
         
         <div class="nav-item">
-            <a th:href="@{/section/7}" 
-               th:class="${currentPage == '7'} ? 'nav-link active' : 'nav-link'">
-                + 7. Трансмиссия
+            <a th:href="@{/section/about}" 
+               th:class="${currentPage == 'about'} ? 'nav-link active' : 'nav-link'">
+                <i class="fas fa-user-md"></i> Обо мне
             </a>
         </div>
         
         <div class="nav-item">
-            <a th:href="@{/section/8}" 
-               th:class="${currentPage == '8'} ? 'nav-link active' : 'nav-link'">
-                + 8. Тормозная система
+            <a th:href="@{/section/articles}" 
+               th:class="${currentPage == 'articles'} ? 'nav-link active' : 'nav-link'">
+                <i class="fas fa-newspaper"></i> Ветеринарные статьи
             </a>
         </div>
         
-        <div class="nav-item">
-            <a th:href="@{/section/9}" 
-               th:class="${currentPage == '9'} ? 'nav-link active' : 'nav-link'">
-                + 9. Ходовая часть
-            </a>
+        <div class="nav-specialty">
+            <h3>Специализация</h3>
+            <div class="nav-item">
+                <a th:href="@{/section/neurology}" 
+                   th:class="${currentPage == 'neurology'} ? 'nav-link active' : 'nav-link'">
+                    <i class="fas fa-brain"></i> Неврология собак и кошек
+                </a>
+            </div>
+            
+            <div class="nav-item">
+                <a th:href="@{/section/cardiology}" 
+                   th:class="${currentPage == 'cardiology'} ? 'nav-link active' : 'nav-link'">
+                    <i class="fas fa-heartbeat"></i> Кардиология собак и кошек
+                </a>
+            </div>
+            
+            <div class="nav-item">
+                <a th:href="@{/section/dermatology}" 
+                   th:class="${currentPage == 'dermatology'} ? 'nav-link active' : 'nav-link'">
+                    <i class="fas fa-skin"></i> Дерматология собак и кошек
+                </a>
+            </div>
         </div>
         
         <div class="nav-item">
-            <a th:href="@{/section/10}" 
-               th:class="${currentPage == '10'} ? 'nav-link active' : 'nav-link'">
-                + 10. Кузов
+            <a th:href="@{/section/contacts}" 
+               th:class="${currentPage == 'contacts'} ? 'nav-link active' : 'nav-link'">
+                <i class="fas fa-address-book"></i> Контакты и время работы
             </a>
         </div>
         
-        <div class="nav-item">
-            <a th:href="@{/section/11}" 
-               th:class="${currentPage == '11'} ? 'nav-link active' : 'nav-link'">
-                + 11. Электрооборудование
-            </a>
-        </div>
-        
-        <div class="nav-item">
-            <a th:href="@{/section/12}" 
-               th:class="${currentPage == '12'} ? 'nav-link active' : 'nav-link'">
-                + 12. Основные неисправности
+        <div class="nav-external">
+            <a href="https://t.me/veterinar66" target="_blank" class="nav-link external">
+                <i class="fab fa-telegram"></i> Телеграм канал
             </a>
         </div>
     </div>
