@@ -10,7 +10,7 @@ public class MainController {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("pageTitle", "Veter96 - Главная");
+        model.addAttribute("pageTitle", "Ветеринар - невролог/кардиолог в Екатеринбурге");
         model.addAttribute("currentPage", "index");
         return "index";
     }
@@ -36,18 +36,16 @@ public class MainController {
 
     private String getSectionTitle(String sectionId) {
         return switch (sectionId) {
-            case "1" -> "1. Органы управления и приборы контроля";
-            case "2" -> "2. Техническое обслуживание";
-            case "3" -> "3. Двигатели";
-            case "4" -> "4. Отопление, вентиляция";
-            case "5" -> "5. Топливная система";
-            case "6" -> "6. Системы пуска, зажигания";
-            case "7" -> "7. Трансмиссия";
-            case "8" -> "8. Тормозная система";
-            case "9" -> "9. Ходовая часть";
-            case "10" -> "10. Кузов";
-            case "11" -> "11. Электрооборудование";
-            case "12" -> "12. Основные неисправности";
+            case "qa" -> "Вопрос-ответ";
+            case "services" -> "Перечень и стоимость услуг";
+            case "reviews" -> "Отзывы";
+            case "diseases" -> "170 заболеваний кожи собак и кошек с 1200 фото";
+            case "about" -> "Обо мне";
+            case "articles" -> "Ветеринарные статьи - переводы из научных журналов";
+            case "neurology" -> "Неврология собак и кошек";
+            case "cardiology" -> "Кардиология собак и кошек";
+            case "dermatology" -> "Дерматология собак и кошек";
+            case "contacts" -> "Контакты и время работы";
             default -> "Неизвестная секция";
         };
     }

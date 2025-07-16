@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Загрузка файла</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div th:replace="fragments/navigation :: navigation"></div>
+        </aside>
+        
+        <main class="content">
+            <header class="page-header">
+                <h1><i class="fas fa-upload"></i> Загрузка файла</h1>
+                <div class="breadcrumb">
+                    <a href="/attachments">Файлы и документы</a> > Загрузка файла
+                </div>
+            </header>
+
+            <!-- Success/Error Messages -->
+            <div th:if="${success}" class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                <span th:text="${success}"></span>
+            </div>
+            
+            <div th:if="${error}" class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:text="${error}"></span>
+            </div>
+
+            <div class="upload-section">
+                <div class="upload-info">
+                    <h2>Загрузка файла</h2>
+                    <p>Выберите файл для загрузки. Поддерживаются документы, изображения и другие файлы.</p>
+                    <div class="upload-limits">
+                        <ul>
+                            <li><i class="fas fa-info-circle"></i> Максимальный размер файла: 10 МБ</li>
+                            <li><i class="fas fa-file-alt"></i> Поддерживаемые форматы: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, GIF и другие</li>
+                            <li><i class="fas fa-shield-alt"></i> Файлы проверяются на безопасность</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <form id="uploadForm" action="/attachments/upload" method="post" enctype="multipart/form-data" class="upload-form">
+                    <div class="form-group">
+                        <label for="file" class="form-label">Выберите файл *</label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <div class="file-upload-content">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Перетащите файл сюда или <span class="upload-link">выберите файл</span></p>
+                                <input type="file" id="file" name="file" required class="file-input" accept="*/*">
+                            </div>
+                            <div id="filePreview" class="file-preview" style="display: none;">
+                                <div class="file-preview-content">
+                                    <i class="fas fa-file"></i>
+                                    <div class="file-info">
+                                        <span id="fileName" class="file-name"></span>
+                                        <span id="fileSize" class="file-size"></span>
+                                    </div>
+                                    <button type="button" id="removeFile" class="btn-remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category" class="form-label">Категория</label>
+                        <div class="category-input-group">
+                            <select id="categorySelect" name="category" class="form-control">
+                                <option value="">Выберите категорию</option>
+                                <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
+                                <option value="__new__">+ Создать новую категорию</option>
+                            </select>
+                            <input type="text" id="newCategory" placeholder="Название новой категории" 
+                                   class="form-control" style="display: none;">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description" class="form-label">Описание</label>
+                        <textarea id="description" name="description" rows="4" 
+                                  placeholder="Краткое описание файла (необязательно)" 
+                                  class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="uploadBtn">
+                            <i class="fas fa-upload"></i> Загрузить файл
+                        </button>
+                        <a href="/attachments" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Отмена
+                        </a>
+                    </div>
+
+                    <div id="uploadProgress" class="upload-progress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <span id="progressText">Загрузка... 0%</span>
+                    </div>
+                </form>
+            </div>
+
+            <div class="upload-tips">
+                <h3><i class="fas fa-lightbulb"></i> Советы по загрузке</h3>
+                <div class="tips-grid">
+                    <div class="tip-item">
+                        <i class="fas fa-tag"></i>
+                        <h4>Используйте категории</h4>
+                        <p>Группируйте файлы по категориям для удобного поиска</p>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-edit"></i>
+                        <h4>Добавляйте описания</h4>
+                        <p>Подробное описание поможет другим пользователям понять содержание файла</p>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-file-signature"></i>
+                        <h4>Используйте понятные имена</h4>
+                        <p>Переименуйте файлы, чтобы их названия были информативными</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Ветеринар Васильев А.В. Все права защищены.</p>
+    </footer>
+
+    <script th:src="@{/js/script.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file');
+            const uploadArea = document.getElementById('fileUploadArea');
+            const filePreview = document.getElementById('filePreview');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const removeFile = document.getElementById('removeFile');
+            const categorySelect = document.getElementById('categorySelect');
+            const newCategory = document.getElementById('newCategory');
+            const uploadForm = document.getElementById('uploadForm');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const uploadProgress = document.getElementById('uploadProgress');
+
+            // Drag and drop functionality
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('drag-over');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('drag-over');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('drag-over');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    showFilePreview(files[0]);
+                }
+            });
+
+            // File selection
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    showFilePreview(this.files[0]);
+                }
+            });
+
+            // Remove file
+            removeFile.addEventListener('click', function() {
+                fileInput.value = '';
+                hideFilePreview();
+            });
+
+            // Category selection
+            categorySelect.addEventListener('change', function() {
+                if (this.value === '__new__') {
+                    newCategory.style.display = 'block';
+                    newCategory.focus();
+                    this.name = '';
+                    newCategory.name = 'category';
+                } else {
+                    newCategory.style.display = 'none';
+                    this.name = 'category';
+                    newCategory.name = '';
+                }
+            });
+
+            // Form submission with progress
+            uploadForm.addEventListener('submit', function(e) {
+                if (!fileInput.files.length) {
+                    e.preventDefault();
+                    alert('Пожалуйста, выберите файл для загрузки');
+                    return;
+                }
+
+                uploadBtn.disabled = true;
+                uploadProgress.style.display = 'block';
+                
+                // Simulate progress (you can implement real XMLHttpRequest for actual progress)
+                let progress = 0;
+                const progressInterval = setInterval(function() {
+                    progress += Math.random() * 15;
+                    if (progress > 90) progress = 90;
+                    
+                    document.getElementById('progressFill').style.width = progress + '%';
+                    document.getElementById('progressText').textContent = 'Загрузка... ' + Math.round(progress) + '%';
+                }, 200);
+
+                // Clear interval after form submission
+                setTimeout(function() {
+                    clearInterval(progressInterval);
+                }, 5000);
+            });
+
+            function showFilePreview(file) {
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+                
+                uploadArea.querySelector('.file-upload-content').style.display = 'none';
+                filePreview.style.display = 'block';
+            }
+
+            function hideFilePreview() {
+                uploadArea.querySelector('.file-upload-content').style.display = 'block';
+                filePreview.style.display = 'none';
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 B';
+                const k = 1024;
+                const sizes = ['B', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+            }
+        });
+    </script>
+</body>
+</html>

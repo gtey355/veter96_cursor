@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Файлы и документы</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div th:replace="fragments/navigation :: navigation"></div>
+        </aside>
+        
+        <main class="content">
+            <header class="page-header">
+                <h1><i class="fas fa-file-alt"></i> Файлы и документы</h1>
+                <div class="header-stats">
+                    <span class="stat-item">
+                        <i class="fas fa-folder"></i>
+                        Всего файлов: <strong th:text="${totalAttachments}">0</strong>
+                    </span>
+                    <span class="stat-item">
+                        <i class="fas fa-database"></i>
+                        Общий размер: <strong th:text="${totalFileSize}">0 B</strong>
+                    </span>
+                </div>
+            </header>
+
+            <!-- Success/Error Messages -->
+            <div th:if="${success}" class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                <span th:text="${success}"></span>
+            </div>
+            
+            <div th:if="${error}" class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:text="${error}"></span>
+            </div>
+
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="search-section">
+                    <form method="get" action="/attachments" class="search-form">
+                        <div class="search-group">
+                            <input type="text" name="search" placeholder="Поиск по названию, описанию..." 
+                                   th:value="${searchKeyword}" class="search-input">
+                            <button type="submit" class="btn btn-search">
+                                <i class="fas fa-search"></i> Поиск
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="filter-section">
+                    <form method="get" action="/attachments" class="filter-form">
+                        <select name="category" class="category-select" onchange="this.form.submit()">
+                            <option value="">Все категории</option>
+                            <option th:each="cat : ${categories}" 
+                                    th:value="${cat}" 
+                                    th:text="${cat}"
+                                    th:selected="${selectedCategory == cat}"></option>
+                        </select>
+                    </form>
+                </div>
+
+                <div class="action-section">
+                    <a href="/attachments/upload" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> Загрузить файл
+                    </a>
+                    <a href="/attachments/popular" class="btn btn-secondary">
+                        <i class="fas fa-star"></i> Популярные
+                    </a>
+                </div>
+            </div>
+
+            <!-- Clear filters -->
+            <div th:if="${searchKeyword or selectedCategory}" class="active-filters">
+                <span>Активные фильтры:</span>
+                <span th:if="${searchKeyword}" class="filter-tag">
+                    Поиск: "<span th:text="${searchKeyword}"></span>"
+                </span>
+                <span th:if="${selectedCategory}" class="filter-tag">
+                    Категория: "<span th:text="${selectedCategory}"></span>"
+                </span>
+                <a href="/attachments" class="clear-filters">
+                    <i class="fas fa-times"></i> Очистить фильтры
+                </a>
+            </div>
+
+            <!-- Attachments List -->
+            <div class="attachments-list">
+                <div th:if="${#lists.isEmpty(attachments)}" class="no-results">
+                    <i class="fas fa-inbox"></i>
+                    <h3>Файлы не найдены</h3>
+                    <p th:if="${searchKeyword or selectedCategory}">
+                        По заданным критериям поиска файлы не найдены. 
+                        <a href="/attachments">Показать все файлы</a>
+                    </p>
+                    <p th:unless="${searchKeyword or selectedCategory}">
+                        Пока не загружено ни одного файла.
+                        <a href="/attachments/upload">Загрузить первый файл</a>
+                    </p>
+                </div>
+
+                <div class="attachment-grid" th:unless="${#lists.isEmpty(attachments)}">
+                    <div th:each="attachment : ${attachments}" class="attachment-card">
+                        <div class="attachment-icon">
+                            <i class="fas fa-file" 
+                               th:classappend="${attachment.contentType != null and attachment.contentType.startsWith('image/') ? 'fa-file-image' : 
+                                              (attachment.contentType != null and attachment.contentType.contains('pdf') ? 'fa-file-pdf' :
+                                              (attachment.contentType != null and (attachment.contentType.contains('word') or attachment.contentType.contains('document')) ? 'fa-file-word' :
+                                              (attachment.contentType != null and (attachment.contentType.contains('excel') or attachment.contentType.contains('spreadsheet')) ? 'fa-file-excel' : 'fa-file')))}"></i>
+                        </div>
+                        
+                        <div class="attachment-info">
+                            <h3 class="attachment-title" th:text="${attachment.originalName}">Filename.pdf</h3>
+                            
+                            <div class="attachment-meta">
+                                <span class="file-size" th:text="${attachment.formattedFileSize}">1.2 MB</span>
+                                <span class="upload-date" 
+                                      th:text="${#temporals.format(attachment.uploadDate, 'dd.MM.yyyy HH:mm')}">01.01.2024</span>
+                                <span th:if="${attachment.downloadCount > 0}" class="download-count">
+                                    <i class="fas fa-download"></i> <span th:text="${attachment.downloadCount}">0</span>
+                                </span>
+                            </div>
+                            
+                            <div th:if="${attachment.category}" class="attachment-category">
+                                <i class="fas fa-tag"></i>
+                                <span th:text="${attachment.category}">Категория</span>
+                            </div>
+                            
+                            <div th:if="${attachment.description}" class="attachment-description">
+                                <p th:text="${attachment.description}">Описание файла</p>
+                            </div>
+                        </div>
+                        
+                        <div class="attachment-actions">
+                            <a th:href="@{/attachments/download/{id}(id=${attachment.id})}" 
+                               class="btn btn-sm btn-primary" title="Скачать">
+                                <i class="fas fa-download"></i>
+                            </a>
+                            <a th:href="@{/attachments/view/{id}(id=${attachment.id})}" 
+                               class="btn btn-sm btn-secondary" title="Просмотр">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a th:href="@{/attachments/edit/{id}(id=${attachment.id})}" 
+                               class="btn btn-sm btn-warning" title="Редактировать">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-danger" 
+                                    onclick="confirmDelete(this)" 
+                                    th:data-id="${attachment.id}"
+                                    th:data-name="${attachment.originalName}"
+                                    title="Удалить">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>Подтверждение удаления</h3>
+            <p>Вы уверены, что хотите удалить файл "<span id="deleteFileName"></span>"?</p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Отмена</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Ветеринар Васильев А.В. Все права защищены.</p>
+    </footer>
+
+    <script th:src="@{/js/script.js}"></script>
+    <script>
+        function confirmDelete(button) {
+            const fileId = button.getAttribute('data-id');
+            const fileName = button.getAttribute('data-name');
+            
+            document.getElementById('deleteFileName').textContent = fileName;
+            document.getElementById('deleteForm').action = '/attachments/delete/' + fileId;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        // Close modal on outside click
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+    </script>
+</body>
+</html>

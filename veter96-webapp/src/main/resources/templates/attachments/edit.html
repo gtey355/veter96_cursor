@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Редактирование файла</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div th:replace="fragments/navigation :: navigation"></div>
+        </aside>
+        
+        <main class="content">
+            <header class="page-header">
+                <h1><i class="fas fa-edit"></i> Редактирование файла</h1>
+                <div class="breadcrumb">
+                    <a href="/attachments">Файлы и документы</a> > 
+                    <a th:href="@{/attachments/view/{id}(id=${attachment.id})}" th:text="${attachment.originalName}">Файл</a> > 
+                    Редактирование
+                </div>
+            </header>
+
+            <div class="edit-section">
+                <div class="file-preview-card">
+                    <div class="file-icon-large">
+                        <i class="fas fa-file-alt" 
+                           th:classappend="${attachment.contentType != null and attachment.contentType.startsWith('image/') ? 'fa-file-image' : 
+                                          (attachment.contentType != null and attachment.contentType.contains('pdf') ? 'fa-file-pdf' :
+                                          (attachment.contentType != null and (attachment.contentType.contains('word') or attachment.contentType.contains('document')) ? 'fa-file-word' :
+                                          (attachment.contentType != null and (attachment.contentType.contains('excel') or attachment.contentType.contains('spreadsheet')) ? 'fa-file-excel' : 'fa-file-alt')))}"></i>
+                    </div>
+                    
+                    <div class="file-preview-info">
+                        <h3 th:text="${attachment.originalName}" class="file-name">Example.pdf</h3>
+                        
+                        <div class="file-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-weight-hanging"></i>
+                                <span th:text="${attachment.formattedFileSize}">1.2 MB</span>
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-calendar"></i>
+                                <span th:text="${#temporals.format(attachment.uploadDate, 'dd.MM.yyyy')}">01.01.2024</span>
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-download"></i>
+                                <span th:text="${attachment.downloadCount}">0</span> скачиваний
+                            </span>
+                        </div>
+                        
+                        <div class="preview-actions">
+                            <a th:href="@{/attachments/download/{id}(id=${attachment.id})}" 
+                               class="btn btn-sm btn-secondary">
+                                <i class="fas fa-download"></i> Скачать
+                            </a>
+                            <a th:href="@{/attachments/view/{id}(id=${attachment.id})}" 
+                               class="btn btn-sm btn-secondary">
+                                <i class="fas fa-eye"></i> Просмотр
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="edit-form-card">
+                    <h2><i class="fas fa-edit"></i> Редактирование информации о файле</h2>
+                    <p class="form-description">
+                        Вы можете изменить описание и категорию файла. Само содержимое файла изменить нельзя.
+                    </p>
+
+                    <form th:action="@{/attachments/edit/{id}(id=${attachment.id})}" method="post" class="edit-form">
+                        <div class="form-group">
+                            <label for="category" class="form-label">
+                                <i class="fas fa-tag"></i> Категория
+                            </label>
+                            <div class="category-input-group">
+                                <select id="categorySelect" name="category" class="form-control">
+                                    <option value="">Без категории</option>
+                                    <option th:each="cat : ${categories}" 
+                                            th:value="${cat}" 
+                                            th:text="${cat}"
+                                            th:selected="${attachment.category == cat}"></option>
+                                    <option value="__new__">+ Создать новую категорию</option>
+                                </select>
+                                <input type="text" id="newCategory" placeholder="Название новой категории" 
+                                       class="form-control" style="display: none;"
+                                       th:value="${attachment.category != null and !#lists.contains(categories, attachment.category) ? attachment.category : ''}">
+                            </div>
+                            <small class="form-help">
+                                Категории помогают организовать файлы и упрощают поиск
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description" class="form-label">
+                                <i class="fas fa-file-alt"></i> Описание
+                            </label>
+                            <textarea id="description" name="description" rows="4" 
+                                      placeholder="Краткое описание файла..." 
+                                      class="form-control" 
+                                      th:text="${attachment.description}"></textarea>
+                            <small class="form-help">
+                                Подробное описание поможет другим пользователям понять содержание файла
+                            </small>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Сохранить изменения
+                            </button>
+                            <a th:href="@{/attachments/view/{id}(id=${attachment.id})}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="edit-tips">
+                    <h3><i class="fas fa-lightbulb"></i> Советы по организации файлов</h3>
+                    <div class="tips-list">
+                        <div class="tip-item">
+                            <i class="fas fa-folder-plus"></i>
+                            <div>
+                                <h4>Создавайте осмысленные категории</h4>
+                                <p>Используйте категории типа "Научные статьи", "Диагностика", "Лечение" для лучшей организации</p>
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <i class="fas fa-search"></i>
+                            <div>
+                                <h4>Добавляйте ключевые слова в описание</h4>
+                                <p>Включите в описание термины, по которым файл должен находиться при поиске</p>
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <i class="fas fa-tags"></i>
+                            <div>
+                                <h4>Используйте единообразные названия категорий</h4>
+                                <p>Старайтесь использовать одинаковые названия для похожих категорий</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Ветеринар Васильев А.В. Все права защищены.</p>
+    </footer>
+
+    <script th:src="@{/js/script.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorySelect = document.getElementById('categorySelect');
+            const newCategory = document.getElementById('newCategory');
+
+            // Check if current category is not in the list (custom category)
+            const currentCategory = /*[[${attachment.category}]]*/ '';
+            const availableCategories = /*[[${categories}]]*/ [];
+            
+            if (currentCategory && !availableCategories.includes(currentCategory)) {
+                // Show custom category input
+                categorySelect.value = '__new__';
+                newCategory.style.display = 'block';
+                newCategory.value = currentCategory;
+                categorySelect.name = '';
+                newCategory.name = 'category';
+            }
+
+            // Category selection handling
+            categorySelect.addEventListener('change', function() {
+                if (this.value === '__new__') {
+                    newCategory.style.display = 'block';
+                    newCategory.focus();
+                    this.name = '';
+                    newCategory.name = 'category';
+                } else {
+                    newCategory.style.display = 'none';
+                    this.name = 'category';
+                    newCategory.name = '';
+                    newCategory.value = '';
+                }
+            });
+
+            // Form validation
+            document.querySelector('.edit-form').addEventListener('submit', function(e) {
+                const category = categorySelect.value === '__new__' ? newCategory.value : categorySelect.value;
+                const description = document.getElementById('description').value;
+
+                // Validate new category name
+                if (categorySelect.value === '__new__' && newCategory.value.trim() === '') {
+                    e.preventDefault();
+                    newCategory.focus();
+                    alert('Пожалуйста, введите название новой категории');
+                    return;
+                }
+
+                // Show confirmation for significant changes
+                if (category !== currentCategory || description !== /*[[${attachment.description ?: ''}]]*/ '') {
+                    if (!confirm('Сохранить изменения?')) {
+                        e.preventDefault();
+                    }
+                }
+            });
+
+            // Character count for description
+            const descriptionTextarea = document.getElementById('description');
+            const maxLength = 1000;
+            
+            function updateCharCount() {
+                const remaining = maxLength - descriptionTextarea.value.length;
+                let helpText = descriptionTextarea.parentNode.querySelector('.form-help');
+                
+                if (remaining < 100) {
+                    helpText.innerHTML = `Подробное описание поможет другим пользователям понять содержание файла. Осталось символов: ${remaining}`;
+                    if (remaining < 0) {
+                        helpText.style.color = '#d32f2f';
+                    } else {
+                        helpText.style.color = '#ff9800';
+                    }
+                } else {
+                    helpText.style.color = '';
+                }
+            }
+
+            descriptionTextarea.addEventListener('input', updateCharCount);
+            updateCharCount();
+        });
+    </script>
+</body>
+</html>
